@@ -18,18 +18,23 @@ model Test {
 model Block {
   hash String @id @unique
   parentHash String 
-  blockNumber Int
+  blockNumber Int @unique
   nonce String
   difficulty Int
   gasLimit String
   gasUsed String
   miner String
   transactionCount Int
+  transactions Transaction[]
 
 }
-//model Transaction
-//to string
-//from string
-//transaction index number
-//blockNumber int
-//
+model Transaction{
+  hash String @id @unique
+  to String
+  from String
+  confirmations Int
+  blockNumber Int
+  block Block @relation(fields: [blockNumber], references: [blockNumber])
+}
+
+
