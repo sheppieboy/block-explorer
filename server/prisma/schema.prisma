@@ -14,3 +14,17 @@ model Test {
   id Int @id @default(autoincrement())
   name String
 }
+
+model Block {
+  hash String @id @unique
+  parentHash String 
+  blockNumber Int
+  nonce String
+  difficulty Int
+  gasLimit String
+  gasUsed String
+  miner String
+  transactionCount Int
+
+
+}
