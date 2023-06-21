@@ -66,5 +66,13 @@ const writeToDB = async (block) => {
     },
   });
 };
+const readNewBlock = async (hash) => {
+  const block = await prisma.block.findUnique({
+    where: {
+      hash: hash,
+    },
+  });
+  console.log(block);
+};
 
 getBlockInfo();
