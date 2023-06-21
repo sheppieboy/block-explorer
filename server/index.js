@@ -82,3 +82,8 @@ const readNewBlock = async (hash) => {
   });
   console.log(block);
 };
+
+alchemy.ws.on('block', (blockNumber) => {
+  console.log(`Latest block is: ${blockNumber}`);
+  addBlock(blockNumber);
+});
