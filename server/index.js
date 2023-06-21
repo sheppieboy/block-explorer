@@ -1,6 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const ethers = require('ethers');
+require('ethers');
 const { PrismaClient } = require('@prisma/client');
 const { Alchemy, Network } = require('alchemy-sdk');
 
@@ -27,18 +27,18 @@ server.listen(process.env.PORT_NUM, () => {
     });
 });
 
-const getBlockInfo = async () => {
-  const blockNumber = await alchemy.core.getBlockNumber();
-
-  //get block
+const addBlock = async (blockNumber) => {
   let block = await alchemy.core.getBlock(blockNumber);
 
   //set BigNumbers to strings
   block.gasLimit = block.gasLimit.toString();
   block.gasUsed = block.gasUsed.toString();
+
+  //add Block to database
+  newBlock(block);
 };
 
-const writeToDB = async (block) => {
+const newBlock = async (block) => {
   const {
     hash,
     parentHash,
@@ -65,6 +65,7 @@ const writeToDB = async (block) => {
       transactionCount: transactions.length,
     },
   });
+  console.log(`Successfully added block: ${number}`);
 };
 const readNewBlock = async (hash) => {
   const block = await prisma.block.findUnique({
@@ -74,5 +75,3 @@ const readNewBlock = async (hash) => {
   });
   console.log(block);
 };
-
-getBlockInfo();
