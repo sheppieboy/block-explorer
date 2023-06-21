@@ -26,5 +26,10 @@ model Block {
   miner String
   transactionCount Int
 
-
 }
+//model Transaction
+//to string
+//from string
+//transaction index number
+//blockNumber int
+//
