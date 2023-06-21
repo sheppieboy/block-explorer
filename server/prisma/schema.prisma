@@ -16,9 +16,9 @@ model Test {
 }
 
 model Block {
-  hash String @id @unique
+  hash String 
   parentHash String 
-  blockNumber Int @unique
+  blockNumber Int @id @unique
   nonce String
   difficulty Int
   gasLimit String
