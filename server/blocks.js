@@ -24,21 +24,25 @@ const createBlock = async (block) => {
     miner,
     transactions,
   } = block;
-
-  await prisma.block.create({
-    data: {
-      hash: hash,
-      parentHash: parentHash,
-      blockNumber: number,
-      nonce: nonce,
-      difficulty: difficulty,
-      gasLimit: gasLimit,
-      gasUsed: gasUsed,
-      miner: miner,
-      transactionCount: transactions.length,
-    },
-  });
-  console.log(`Successfully added block: ${number}`);
+  try {
+    await prisma.block.create({
+      data: {
+        hash: hash,
+        parentHash: parentHash,
+        blockNumber: number,
+        nonce: nonce,
+        difficulty: difficulty,
+        gasLimit: gasLimit,
+        gasUsed: gasUsed,
+        miner: miner,
+        transactionCount: transactions.length,
+      },
+    });
+    console.log(`Successfully added block: ${number}`);
+    await createTransactions(transactions, number);
+  } catch (error) {
+    console.log('There has been an error adding the block to the db: ', error);
+  }
 };
 
 const createTransactions = async (transactions, blockNumber) => {
@@ -46,17 +50,24 @@ const createTransactions = async (transactions, blockNumber) => {
     const { hash, to, from, confirmations, blockNumber } = transaction;
 
     //create transactions in db
-    await prisma.transaction.create({
-      data: {
-        hash: hash,
-        to: to,
-        from: from,
-        confirmations: confirmations,
-        blockNumber: blockNumber,
-      },
-    });
+    try {
+      await prisma.transaction.create({
+        data: {
+          hash: hash,
+          to: to,
+          from: from,
+          confirmations: confirmations,
+          blockNumber: blockNumber,
+        },
+      });
+      console.log(`Added the transactions for block ${blockNumber}`);
+    } catch (err) {
+      console.log(
+        'There has been an error creating transactions in the database:',
+        err
+      );
+    }
   }
-  console.log(`Added the transactions for block ${blockNumber}`);
 };
 
 //read the newest block
@@ -70,8 +81,7 @@ const readNewBlock = async (number) => {
 };
 
 //recieves a block number, retrieves the block and uses the function newBlock to push it the database
-const addBlock = async () => {
-  const blockNumber = await alchemy.core.getBlockNumber();
+const addBlock = async (blockNumber) => {
   let block = await alchemy.core.getBlockWithTransactions(blockNumber);
 
   //set BigNumbers to strings
@@ -80,7 +90,6 @@ const addBlock = async () => {
 
   //add Block to database
   createBlock(block);
-  createTransactions(block.transactions, blockNumber);
 };
 
 module.exports = { prisma, alchemy, addBlock };
