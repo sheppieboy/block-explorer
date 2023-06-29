@@ -1,13 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const addBlock = require('./blocks');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+const { prisma, alchemy, addBlock } = require('./blocks');
 
 dotenv.config();
-
-//get alchemy node for mainnet
 
 const server = express();
 
@@ -29,5 +24,5 @@ server.listen(process.env.PORT_NUM, () => {
 
 alchemy.ws.on('block', (blockNumber) => {
   console.log(`Latest block is: ${blockNumber}`);
-  addBlock(blockNumber);
+  addBlock();
 });
