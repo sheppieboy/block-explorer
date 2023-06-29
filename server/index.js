@@ -27,8 +27,7 @@ server.listen(process.env.PORT_NUM, () => {
     });
 });
 
-// alchemy.ws.on('block', (blockNumber) => {
-//   console.log(`Latest block is: ${blockNumber}`);
-//   addBlock(blockNumber);
-// });
-addBlock();
+alchemy.ws.on('block', (blockNumber) => {
+  console.log(`Latest block is: ${blockNumber}`);
+  addBlock(blockNumber);
+});
