@@ -43,7 +43,6 @@ const createBlock = async (block) => {
 
 const createTransactions = async (transactions, blockNumber) => {
   for (const transaction of transactions) {
-    console.log(transaction.transactionIndex);
     const { hash, to, from, confirmations, blockNumber } = transaction;
 
     //create transactions in db
@@ -84,4 +83,4 @@ const addBlock = async () => {
   createTransactions(block.transactions, blockNumber);
 };
 
-module.exports = addBlock;
+module.exports = { prisma, alchemy, addBlock };
