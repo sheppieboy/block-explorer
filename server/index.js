@@ -16,6 +16,7 @@ server.listen(process.env.PORT_NUM, () => {
     .then(() => {
       console.log('Connected to postgres db');
       prisma.block.deleteMany();
+      prisma.transaction.deleteMany();
     })
     .catch((err) => {
       console.log('Error connecting to database', err);
@@ -24,5 +25,5 @@ server.listen(process.env.PORT_NUM, () => {
 
 alchemy.ws.on('block', (blockNumber) => {
   console.log(`Latest block is: ${blockNumber}`);
-  addBlock();
+  addBlock(blockNumber);
 });
